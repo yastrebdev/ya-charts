@@ -1,12 +1,34 @@
 {
   "name": "ya-charts",
-  "packageManager": "yarn@4.1.1",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "yastrebov <yastrebdev@gmail.com>",
+  "repository": "https://github.com/yastrebdev/ya-charts.git",
+  "author": "Yastrebov <yastrebdev@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "minireset.css": "^0.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "packageManager": "yarn@4.1.1",
+  "devDependencies": {
+    "@chromatic-com/storybook": "1.3.2",
+    "@storybook/addon-essentials": "^8.0.6",
+    "@storybook/addon-interactions": "^8.0.6",
+    "@storybook/addon-links": "^8.0.6",
+    "@storybook/addon-onboarding": "^8.0.6",
+    "@storybook/blocks": "^8.0.6",
+    "@storybook/react": "^8.0.6",
+    "@storybook/react-vite": "^8.0.6",
+    "@storybook/test": "^8.0.6",
+    "prop-types": "15.8.1",
+    "sass": "^1.74.1",
+    "storybook": "^8.0.6",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.8"
+  },
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   }
 }
