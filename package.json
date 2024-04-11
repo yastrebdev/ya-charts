@@ -1,0 +1,12 @@
+{
+  "name": "ya-charts",
+  "packageManager": "yarn@4.1.1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "yastrebov <yastrebdev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
