@@ -1,22 +1,96 @@
-import Canvas from "../../components/use-components/Canvas"
+import Canvas from "../../components/use-components/Canvas";
 
-const Bar = ({height = 200, width = 300, gap = 1}) => {
-    const data = [20, 50, 30, 80, 40, 20, 35, 20, 50, 30, 80, 40, 20, 35];
+interface DataItem {
+    [key: string]: number;
+}
 
-    const barMargin = Math.ceil(width / data.length) / (gap * 10);
-    const barWidth = Math.ceil(width / data.length) - barMargin;
-    const barColor = '#007bff';
+interface Props {
+    height?: number;
+    width?: number;
+    gap?: number;
+    data?: DataItem[];
+    axisX?: string;
+    axisY?: string;
+}
 
-    const draw = (context: CanvasRenderingContext2D) => {
-        data.forEach((value, index) => {
-            const x = index * (barWidth + barMargin);
-            const y = 100 - value;
-            context.fillStyle = barColor;
-            context.fillRect(x, y, barWidth, value);
+interface DataForHorizontalLine {
+    ctx: CanvasRenderingContext2D,
+    maxLength: number,
+    height:number,
+    maxValue: number,
+    sortedData: DataItem[]
+}
+
+const Bar = ({
+    height = 200,
+    width = 200,
+    gap = 2,
+    data = [],
+    axisY = "",
+    axisX = "",
+}: Props) => {
+    const sortedData = [...data].sort((a, b) => a[axisX] - b[axisX]);
+    const maxValue = Math.max(...sortedData.map(item => item[axisY]));
+    const numberOfBars = sortedData.length;
+    const barColor = "#007bff";
+
+    const drawHorizontalLines = ({
+        ctx,
+        maxLength,
+        height,
+        maxValue,
+        sortedData
+    }: DataForHorizontalLine) => {
+        sortedData.forEach(({ [axisY]: value }) => {
+            const y = height - (value / maxValue) * height;
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.moveTo(maxLength - 5, y);
+            ctx.lineTo(width, y);
+            ctx.stroke();
         });
     };
 
-    return <Canvas draw={draw} height={height} width={width} />
-}
+    const draw = (ctx: CanvasRenderingContext2D) => {
+        const maxLength = Math.max(...sortedData.map(({ [axisY]: value }) => ctx.measureText(value?.toString()).width));
+        const barWidth = (width - gap * (numberOfBars - 1)) / numberOfBars - Math.round(maxLength / numberOfBars);
 
-export default Bar
+        sortedData.forEach(({ [axisY]: value }, index) => {
+            const x = (barWidth + gap) * index + maxLength;
+            const y = height - (value / maxValue) * height;
+
+            ctx.fillStyle = barColor;
+            ctx.fillRect(x, y, barWidth, (value / maxValue) * height);
+
+            ctx.fillStyle = "#000000";
+            ctx.textAlign = "start";
+            ctx.fillText(value?.toString(), 0, y + 10);
+        });
+
+        const dataLines = {
+            ctx,
+            maxLength,
+            height,
+            maxValue,
+            sortedData
+        }
+
+        drawHorizontalLines(dataLines);
+
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.moveTo(maxLength, height);
+        ctx.lineTo(width + maxLength, height);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.moveTo(maxLength, 0);
+        ctx.lineTo(maxLength, height);
+        ctx.stroke();
+    };
+
+    return <Canvas draw={draw} height={height} width={width} />;
+};
+
+export default Bar;
