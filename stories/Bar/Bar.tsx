@@ -1,96 +1,69 @@
+import { useState } from "react";
 import Canvas from "../../components/use-components/Canvas";
+import { createArrayColumns } from "./createArrayColumns";
+import { DataItem, ItemColumn } from "./types";
 
-interface DataItem {
-    [key: string]: number;
-}
-
-interface Props {
-    height?: number;
-    width?: number;
+interface BarProps {
+    width: number;
+    height: number;
     gap?: number;
     data?: DataItem[];
     axisX?: string;
     axisY?: string;
+    colorColumn?: string;
 }
 
-interface DataForHorizontalLine {
-    ctx: CanvasRenderingContext2D,
-    maxLength: number,
-    height:number,
-    maxValue: number,
-    sortedData: DataItem[]
-}
-
-const Bar = ({
+const Bar: React.FC<BarProps> = ({
     height = 200,
     width = 200,
     gap = 2,
     data = [],
-    axisY = "",
-    axisX = "",
-}: Props) => {
-    const sortedData = [...data].sort((a, b) => a[axisX] - b[axisX]);
-    const maxValue = Math.max(...sortedData.map(item => item[axisY]));
-    const numberOfBars = sortedData.length;
-    const barColor = "#007bff";
+    axisX = '',
+    axisY = '',
+    colorColumn = ''
+}) => {
+    const [columns, setColumns] = useState<ItemColumn[] | null>(null)
 
-    const drawHorizontalLines = ({
-        ctx,
-        maxLength,
+    const sortedData = [...data].sort((a, b) => a[axisX] - b[axisX]);
+
+    const options = {
+        width,
         height,
-        maxValue,
-        sortedData
-    }: DataForHorizontalLine) => {
-        sortedData.forEach(({ [axisY]: value }) => {
-            const y = height - (value / maxValue) * height;
-            ctx.beginPath();
-            ctx.lineWidth = 1;
-            ctx.moveTo(maxLength - 5, y);
-            ctx.lineTo(width, y);
-            ctx.stroke();
-        });
-    };
+        gap,
+        axisY
+    }
 
     const draw = (ctx: CanvasRenderingContext2D) => {
-        const maxLength = Math.max(...sortedData.map(({ [axisY]: value }) => ctx.measureText(value?.toString()).width));
-        const barWidth = (width - gap * (numberOfBars - 1)) / numberOfBars - Math.round(maxLength / numberOfBars);
-
-        sortedData.forEach(({ [axisY]: value }, index) => {
-            const x = (barWidth + gap) * index + maxLength;
-            const y = height - (value / maxValue) * height;
-
-            ctx.fillStyle = barColor;
-            ctx.fillRect(x, y, barWidth, (value / maxValue) * height);
-
-            ctx.fillStyle = "#000000";
-            ctx.textAlign = "start";
-            ctx.fillText(value?.toString(), 0, y + 10);
-        });
-
-        const dataLines = {
-            ctx,
-            maxLength,
-            height,
-            maxValue,
-            sortedData
+        const createColumns = createArrayColumns(sortedData, options, ctx, colorColumn)
+        console.log(createColumns)
+        if (!columns) {
+            setColumns(createColumns)
         }
+    }
 
-        drawHorizontalLines(dataLines);
+    const onColumn = (event: MouseEvent) => {
+        const target = event.target as HTMLElement
+        const rect = target.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
 
-        ctx.beginPath();
-        ctx.lineWidth = 1;
-        ctx.moveTo(maxLength, height);
-        ctx.lineTo(width + maxLength, height);
-        ctx.stroke();
+        columns?.forEach((column: ItemColumn, index: number) => {
+            const { x: cx, y: cy, width, height } = column
 
-        ctx.beginPath();
-        ctx.lineWidth = 1;
-        ctx.moveTo(maxLength, 0);
-        ctx.lineTo(maxLength, height);
-        ctx.stroke();
+            if (x >= cx && x <= cx + width && y >= cy && y <= cy + height) {
+                console.log(`Курсор на квадрате ${index}`);
+            }
+        });
     };
 
-    return <Canvas draw={draw} height={height} width={width} />;
-};
+    return (
+        <Canvas
+            draw={draw}
+            height={height}
+            width={width}
+            onMouseOver={onColumn}
+    />
+    )
+}
 
-export default Bar;
+export default Bar
