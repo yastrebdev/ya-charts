@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 
-const useResizeElement = (element: HTMLElement | null) => {
+const useResizeElement = (element: {current: HTMLElement | null}) => {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
 
     useEffect(() => {
         const updateSize = () => {
-            if (element) {
-                setWidth(element.offsetWidth);
-                setHeight(element.offsetHeight);
+            if (element.current) {
+                setWidth(element.current.offsetWidth);
+                setHeight(element.current.offsetHeight);
             }
         };
 
         updateSize();
 
         window.addEventListener("resize", updateSize);
-        console.log(element)
+
         return () => window.removeEventListener("resize", updateSize);
     }, [element]);
     return {width, height}

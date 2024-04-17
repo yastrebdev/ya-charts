@@ -1,5 +1,4 @@
 import Bar from "./Bar";
-import { FieldBar } from "./FieldBar";
 
 export default {
     title: "Bar",
@@ -21,8 +20,17 @@ const data = [
     { index: 2017, value: 11 },
 ];
 
+const config = {
+    width: 1000,
+    height: 500,
+    gap: 0.2,
+    axisX: 'index',
+    axisY: 'value',
+}
+
 export const Default = () => (
-    // <Bar width={500} height={300} data={data} axisY="value" axisX="index" colorColumn="#13c2c2"/>
-    <FieldBar width={500} height={300}/>
-    // <FieldBar width={'100%'} height={'100%'}/>
+    <Bar
+        data={data}
+        {...config}
+    />
 );

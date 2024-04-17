@@ -1,17 +1,21 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface CanvasProps {
     draw: (context: CanvasRenderingContext2D) => void;
     height?: number | string;
     width?: number | string;
-    onMouseOver?: any;
+    onMouseEnter?: any;
+    onMouseLeave?: any;
+    onMouseMove?: any;
 }
 
 const Canvas: React.FC<CanvasProps> = ({
     draw,
     height = 400,
     width = 400,
-    onMouseOver,
+    onMouseEnter,
+    onMouseLeave,
+    onMouseMove
 }) => {
     const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -28,7 +32,9 @@ const Canvas: React.FC<CanvasProps> = ({
             ref={canvas}
             height={height}
             width={width}
-            onMouseOver={onMouseOver}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onMouseMove={(event) => onMouseMove(event)}
         />
     );
 };

@@ -8,3 +8,21 @@ export interface ItemColumn {
     width: number;
     height: number;
 }
+
+// props & arguments
+
+export interface BarChart {
+    data: DataItem[];
+    width: number | string;
+    height: number | string;
+    gap?: number;
+    axisX: string
+    axisY: string
+}
+
+export interface ColumnWrapperOptions {
+    columnWrapperWidth: number,
+    numberOfColumn: number;
+    xmove: number,
+    over: boolean,
+}

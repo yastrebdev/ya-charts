@@ -1,26 +1,26 @@
 import { DataItem, ItemColumn } from "./types";
 
 interface Options {
-    width: number;
     height: number;
+    columnWrapperWidth: number;
     gap: number;
     axisY: string;
 }
 
-export const createArrayColumns = (
+export const createColumns = (
+    ctx: CanvasRenderingContext2D,
     data: DataItem[],
     options: Options,
-    ctx?: CanvasRenderingContext2D,
     columnColor: string = "#007bff"
 ) => {
-    const { width, height, gap, axisY } = options;
+    const { height, columnWrapperWidth, gap, axisY } = options;
     
     const maxValue = Math.max(...data.map(item => item[axisY]));
-    const numberOfColumn = data.length;
-    const columnWidth = (width - gap * (numberOfColumn - 1)) / numberOfColumn;
+    const dependentGap = columnWrapperWidth * gap / 2
+    const columnWidth = columnWrapperWidth - dependentGap;
     
     const column: ItemColumn[] = data.map(({ [axisY]: value }, index) => {
-        const x = (columnWidth + gap) * index;
+        const x = (columnWidth + dependentGap) * index + dependentGap / 2;
         const y = height - (value / maxValue) * height;
         
         if (ctx) {
