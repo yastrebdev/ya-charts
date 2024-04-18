@@ -6,7 +6,7 @@ export default {
 };
 
 const data = [
-    { index: 1972, value: 82 },
+    { index: 1972, value: 84 },
     { index: 2001, value: 19 },
     { index: 1829, value: 31 },
     { index: 1941, value: 56 },
@@ -26,6 +26,7 @@ const config = {
     gap: 0.2,
     axisX: 'index',
     axisY: 'value',
+    // guides: false,
 }
 
 export const Default = () => (

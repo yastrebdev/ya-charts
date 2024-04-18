@@ -8,6 +8,7 @@ const Bar: React.FC<BarChart> = ({
     gap,
     axisX = '',
     axisY = '',
+    guides = true,
 }) => {
     const sortedData = [...data].sort((a, b) => a[axisX] - b[axisX]);
 
@@ -18,6 +19,7 @@ const Bar: React.FC<BarChart> = ({
             gap={gap}
             data={sortedData}
             axisY={axisY}
+            guides={guides}
         />
     )
 }

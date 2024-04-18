@@ -17,8 +17,9 @@ export function createColumnWrapper(
         const isWhether = between(xmove, x, x + columnWrapperWidth)
         const height = ctx.canvas.height
 
-        ctx.beginPath()
         ctx.fillStyle = isWhether && over ? '#fafafa' : '#ffffff';
+        
+        ctx.beginPath()
         ctx.fillRect(x, y, columnWrapperWidth, height);
         ctx.closePath()
     }

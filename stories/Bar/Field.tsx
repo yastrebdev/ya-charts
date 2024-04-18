@@ -4,13 +4,16 @@ import useResizeElement from "../../hooks/useResizeElement";
 import { createColumnWrapper } from "./createColumnWrapper";
 import { ColumnWrapperOptions, DataItem } from "./types";
 import { createColumns } from "./createColumns";
+import { createGuides } from "./createGuides";
+import { createText } from "./createText";
 
 interface FieldBarProps {
     data: DataItem[];
     width?: number | string;
     height?: number | string;
     gap?: number;
-    axisY: string
+    axisY: string;
+    guides: boolean
 }
 
 export const Field: React.FC<FieldBarProps> = ({
@@ -18,7 +21,8 @@ export const Field: React.FC<FieldBarProps> = ({
     width = 400,
     height = 400,
     gap = 0.1,
-    axisY
+    axisY,
+    guides
 }) => {
     const [over, setOver] = useState(false)
     const [xmove, setXmove] = useState(0)
@@ -29,6 +33,7 @@ export const Field: React.FC<FieldBarProps> = ({
 
     const numberOfColumn = data.length;
     const columnWrapperWidth = widthWrapper / numberOfColumn;
+    const maxValue = Math.max(...data.map(item => item[axisY]));
 
     const columnWrapperOptions: ColumnWrapperOptions = {
         columnWrapperWidth,
@@ -37,16 +42,30 @@ export const Field: React.FC<FieldBarProps> = ({
         over
     }
 
+    const guidesOptions = {
+        width: widthWrapper,
+        height: heightWrapper,
+        maxValue,
+    }
+
     const columnOptions = {
         height: heightWrapper,
         columnWrapperWidth,
+        maxValue,
         gap,
         axisY
     }
 
+    const textOptions = {
+        height: heightWrapper,
+        columnWrapperWidth
+    }
+
     const draw = (ctx: CanvasRenderingContext2D) => {
         createColumnWrapper(ctx, columnWrapperOptions)
-        createColumns(ctx, data, columnOptions)
+        guides && createGuides(ctx, guidesOptions)
+        const columns = createColumns(ctx, data, columnOptions)
+        createText(ctx, textOptions, columns)
     }
 
     function onMouseEnter() {

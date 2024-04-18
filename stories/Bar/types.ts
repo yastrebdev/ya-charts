@@ -7,6 +7,7 @@ export interface ItemColumn {
     y: number;
     width: number;
     height: number;
+    position: number;
 }
 
 // props & arguments
@@ -16,8 +17,9 @@ export interface BarChart {
     width: number | string;
     height: number | string;
     gap?: number;
-    axisX: string
-    axisY: string
+    axisX: string;
+    axisY: string;
+    guides?: boolean;
 }
 
 export interface ColumnWrapperOptions {
