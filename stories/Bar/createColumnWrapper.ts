@@ -1,15 +1,26 @@
+import type { MousePosition } from "./types"
 import { between } from "../../utils/between"
-import { ColumnWrapperOptions } from "./types"
+
+interface Options {
+    columnWrapperWidth: number,
+    numberOfColumn: number,
+}
 
 export function createColumnWrapper(
     ctx: CanvasRenderingContext2D,
-    {
-        columnWrapperWidth,
-        numberOfColumn,
-        xmove,
-        over
-    }: ColumnWrapperOptions
+    options: Options,
+    mousePosition: MousePosition
 ) {
+    const {
+        numberOfColumn,
+        columnWrapperWidth,
+    } = options
+
+    const {
+        over,
+        xmove,
+    } = mousePosition
+
     for (let i = 0; i < numberOfColumn; i++) {
         const x = columnWrapperWidth * i
         const y = 0

@@ -1,72 +1,59 @@
+// --- types
+import { BarField } from "./types";
+// --- react
 import React, { useRef, useState } from "react";
+// --- components
 import Canvas from "../../components/use-components/Canvas";
+// --- hooks - utils - functions
 import useResizeElement from "../../hooks/useResizeElement";
-import { createColumnWrapper } from "./createColumnWrapper";
-import { ColumnWrapperOptions, DataItem } from "./types";
-import { createColumns } from "./createColumns";
-import { createGuides } from "./createGuides";
-import { createText } from "./createText";
+import { dataAboutData } from "./functions";
+import { draw } from "./draw";
 
-interface FieldBarProps {
-    data: DataItem[];
-    width?: number | string;
-    height?: number | string;
-    gap?: number;
-    axisY: string;
-    guides: boolean
-}
-
-export const Field: React.FC<FieldBarProps> = ({
+export const Field: React.FC<BarField> = ({
     data,
-    width = 400,
-    height = 400,
-    gap = 0.1,
-    axisY,
-    guides
+    width,
+    height,
+    gap,
+    fieldY,
+    guides,
+    columnColor
 }) => {
     const [over, setOver] = useState(false)
     const [xmove, setXmove] = useState(0)
     const [ymove, setYmove] = useState(0)
 
-    const div = useRef<HTMLDivElement>(null);
-    const {width: widthWrapper, height: heightWrapper} = useResizeElement(div)
-
-    const numberOfColumn = data.length;
-    const columnWrapperWidth = widthWrapper / numberOfColumn;
-    const maxValue = Math.max(...data.map(item => item[axisY]));
-
-    const columnWrapperOptions: ColumnWrapperOptions = {
-        columnWrapperWidth,
-        numberOfColumn,
+    const mousePosition = {
+        over,
         xmove,
-        over
+        ymove
     }
 
-    const guidesOptions = {
+    const div = useRef<HTMLDivElement>(null);
+    const { width: widthWrapper, height: heightWrapper } = useResizeElement(div)
+
+    const {
+        numberOfColumn,
+        columnWrapperWidth,
+        maxValue
+    } = dataAboutData(data, widthWrapper, fieldY)
+
+    const styles = {
+        columnColor
+    }
+
+    const options = {
         width: widthWrapper,
         height: heightWrapper,
-        maxValue,
-    }
-
-    const columnOptions = {
-        height: heightWrapper,
+        numberOfColumn,
         columnWrapperWidth,
         maxValue,
         gap,
-        axisY
+        fieldY,
+        guides,
+        styles
     }
 
-    const textOptions = {
-        height: heightWrapper,
-        columnWrapperWidth
-    }
-
-    const draw = (ctx: CanvasRenderingContext2D) => {
-        createColumnWrapper(ctx, columnWrapperOptions)
-        guides && createGuides(ctx, guidesOptions)
-        const columns = createColumns(ctx, data, columnOptions)
-        createText(ctx, textOptions, columns)
-    }
+    const createChart = (ctx: CanvasRenderingContext2D) => draw(ctx, data, options, mousePosition)
 
     function onMouseEnter() {
         setOver(true)
@@ -87,7 +74,7 @@ export const Field: React.FC<FieldBarProps> = ({
     return (
         <div ref={div} style={{ width, height }}>
             <Canvas
-                draw={draw}
+                draw={createChart}
                 width={widthWrapper}
                 height={heightWrapper}
                 onMouseEnter={onMouseEnter}

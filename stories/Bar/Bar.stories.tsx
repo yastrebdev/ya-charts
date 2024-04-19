@@ -6,7 +6,33 @@ export default {
 };
 
 const data = [
-    { index: 1972, value: 84 },
+    // { index: 1972, value: 100 },
+    // { index: 2001, value: 160 },
+    // { index: 1829, value: 210 },
+    // { index: 1941, value: 40 },
+    // { index: 2013, value: 110 },
+    // { index: 1999, value: 80 },
+    // { index: 1274, value: 50 },
+    // { index: 2012, value: 170 },
+    // { index: 2014, value: 270 },
+    // { index: 2015, value: 210 },
+    // { index: 2016, value: 140 },
+    // { index: 2017, value: 110 },
+    
+    // { index: 1972, value: 10 },
+    // { index: 2001, value: 11 },
+    // { index: 1829, value: 4 },
+    // { index: 1941, value: 4 },
+    // { index: 2013, value: 13 },
+    // { index: 1999, value: 8 },
+    // { index: 1274, value: 5 },
+    // { index: 2012, value: 7 },
+    // { index: 2014, value: 3 },
+    // { index: 2015, value: 1 },
+    // { index: 2016, value: 4 },
+    // { index: 2017, value: 6 },
+
+    { index: 1972, value: 78 },
     { index: 2001, value: 19 },
     { index: 1829, value: 31 },
     { index: 1941, value: 56 },
@@ -24,9 +50,13 @@ const config = {
     width: 1000,
     height: 500,
     gap: 0.2,
-    axisX: 'index',
-    axisY: 'value',
+    fieldX: 'index',
+    fieldY: 'value',
     // guides: false,
+    styles: {
+        // columnColor: '#007bff'
+    }
+
 }
 
 export const Default = () => (

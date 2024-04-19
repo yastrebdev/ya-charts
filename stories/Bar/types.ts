@@ -2,29 +2,40 @@ export interface DataItem {
     [key: string]: number;
 }
 
-export interface ItemColumn {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    position: number;
+export interface MousePosition {
+    over: boolean;
+    xmove: number;
+    ymove: number;
 }
 
 // props & arguments
 
-export interface BarChart {
-    data: DataItem[];
+export interface StylesBar {
+    columnColor?: string
+}
+
+export interface generalChartBar {
     width: number | string;
     height: number | string;
     gap?: number;
-    axisX: string;
-    axisY: string;
+    fieldX?: string;
+    fieldY?: string;
+    styles: StylesBar
+}
+
+export interface BarChart extends generalChartBar {
+    data: DataItem[];
     guides?: boolean;
 }
 
-export interface ColumnWrapperOptions {
-    columnWrapperWidth: number,
+export interface BarField extends Omit<BarChart, 'styles'> {
+    columnColor?: string
+}
+
+// options
+
+export interface Options extends generalChartBar {
     numberOfColumn: number;
-    xmove: number,
-    over: boolean,
+    columnWrapperWidth: number;
+    maxValue: number;
 }

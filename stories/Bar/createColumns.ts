@@ -1,39 +1,49 @@
-import { DataItem, ItemColumn } from "./types";
+import type { DataItem, MousePosition, StylesBar } from "./types";
+import { between } from "../../utils/between";
 
 interface Options {
-    height: number;
     columnWrapperWidth: number;
+    fieldY: string;
+    height: number;
     maxValue: number;
-    gap: number;
-    axisY: string;
+    gap: number | undefined;
+    styles: StylesBar;
 }
 
 export const createColumns = (
     ctx: CanvasRenderingContext2D,
     data: DataItem[],
     options: Options,
-    columnColor: string = "#007bff"
+    mousePosition: MousePosition,
 ) => {
-    const { height, columnWrapperWidth, maxValue, gap, axisY } = options;
+    const {
+        columnWrapperWidth,
+        gap,
+        fieldY,
+        height,
+        maxValue,
+        styles
+    } = options;
+
+    const { over, xmove, ymove } = mousePosition
+    const { columnColor } = styles
     
-    const dependentGap = columnWrapperWidth * gap / 2
+    const dependentGap = columnWrapperWidth * (gap as number) / 2
     const columnWidth = columnWrapperWidth - dependentGap;
     
-    const columns: ItemColumn[] = data.map(({ [axisY]: value }, index) => {
+    data.map(({ [fieldY]: value }, index) => {
         const x = Math.round((columnWidth + dependentGap) * index + dependentGap / 2);
         const y = height - (value / maxValue) * height;
-        
+
+        const isWhether = between(xmove, x, x + columnWidth)
+            && between(ymove, y, y + height)
+
         if (ctx) {
-            ctx.fillStyle = columnColor;
+            ctx.fillStyle = isWhether && over ? 'rgba(0, 123, 255, .9)' : columnColor as string;
 
             ctx.beginPath()
             ctx.fillRect(x, y, columnWidth, (value / maxValue) * height);
             ctx.closePath()
         }
-
-        const position = index + 1
-
-        return { x, y, width: columnWidth, height: (value / maxValue) * height, position};
     });
-    return columns
 }

@@ -1,16 +1,20 @@
+import type { BarChart } from "./types"
 import { Field } from "./Field"
-import { BarChart } from "./types"
 
 const Bar: React.FC<BarChart> = ({
     data,
-    width,
-    height,
-    gap,
-    axisX = '',
-    axisY = '',
+    width = 400,
+    height = 400,
+    gap = 0.1,
+    fieldX = '',
+    fieldY = '',
     guides = true,
+    styles
 }) => {
-    const sortedData = [...data].sort((a, b) => a[axisX] - b[axisX]);
+    const sortedData = [...data].sort((a, b) => a[fieldX] - b[fieldX]);
+    const {
+        columnColor = '#007bff'
+    } = styles
 
     return (
         <Field
@@ -18,8 +22,10 @@ const Bar: React.FC<BarChart> = ({
             height={height}
             gap={gap}
             data={sortedData}
-            axisY={axisY}
+            fieldY={fieldY}
+            fieldX={fieldX}
             guides={guides}
+            columnColor={columnColor}
         />
     )
 }
