@@ -10,36 +10,41 @@ export function createGuides(
 ) {
     const { width, height, maxValue } = options
 
-    const { percentage, numGuides, step } = parametrsGuides(maxValue)
+    const { percentage, raundedMaxValue, step } = parametrsGuides(maxValue)
     
     const percentageOfHeight = height * (percentage / 100)
     const guidesHeight = height - percentageOfHeight
 
     function parametrsGuides(value: number) {
         const step = stepCalculation(value)
-        console.log('step:', step)
 
         const rounding = roundCalculation(value)
-        console.log('rounding:', rounding)
 
         const flawedIn = value - rounding
         const procentageFlawedMaxValue = flawedIn / value * 100
 
         const percentage = procentageFlawedMaxValue
-        const numGuides = rounding
+        const raundedMaxValue = rounding
 
         return {
             percentage,
-            numGuides,
+            raundedMaxValue,
             step
         }
     }
 
     function roundCalculation(value: number) {
+        const afterTheDot = isFraction(value)
+        if (afterTheDot) {
+            value = value * 10 ** (afterTheDot as number)
+        }
+        const valueToString = value.toString();
+        const firstNumber = Number(valueToString.slice(0, 1))
+        console.log(firstNumber)
+
         if (value <= 10) return Math.floor(value / 10) * 10
+
         return value
-        // const result = value <= 10 ? Math.floor(value / 10) * 10 : value
-        // return result
     }
 
     function stepCalculation(value: number) {
@@ -49,8 +54,17 @@ export function createGuides(
         return 10
     }
 
-    for (let i = 0; i < numGuides / step; i++) {
-        const y = height - guidesHeight / (numGuides / step - 1) * i
+    function isFraction(num: number) {
+        if (!Number.isInteger(num)) {
+            const numberString = num.toString();
+            const dotIndex = numberString.indexOf('.')
+            return numberString.length - dotIndex - 1
+        }
+        return !Number.isInteger(num);
+    }
+
+    for (let i = 0; i < raundedMaxValue / step; i++) {
+        const y = height - guidesHeight / (raundedMaxValue / step - 1) * i
 
         ctx.strokeStyle = '#bfbfbf'
         ctx.beginPath()
